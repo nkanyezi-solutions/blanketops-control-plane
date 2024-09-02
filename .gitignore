@@ -1,0 +1,5 @@
+.vagrant
+.env
+*.key
+*.csr
+*.crt
