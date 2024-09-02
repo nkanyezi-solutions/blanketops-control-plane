@@ -1,0 +1,26 @@
+- hosts: all
+  become: true
+  strategy: debug
+  tasks:
+  - name: Install Kubectl
+    command: wget https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
+    register: install_kubectl
+  - debug: var=install_kubectl
+
+  - name: Change Permissions Kubectl
+    command: chmod +x kubectl
+    register: change_permissions_kubectl
+  - debug: var=change_permissions_kubectl
+
+  - name: Move Kubectl
+    command: mv kubectl /usr/local/bin/
+    register: move_kubectl
+  - debug: var=move_kubectl
+
+  - name: Verify Kubectl
+    command: kubectl version --client
+    register: verify_kubectl
+  - debug: var=verify_kubectl
+
+
+

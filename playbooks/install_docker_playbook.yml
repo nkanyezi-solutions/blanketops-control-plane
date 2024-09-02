@@ -1,4 +1,3 @@
----
 - hosts: all
   become: true
   strategy: debug
@@ -15,7 +14,7 @@
       - curl
       # - lsb_release
       - build-essential
-      - checkinstall 
+      - checkinstall
       - zlib1g-dev
       - gnupg-agent
       - software-properties-common
@@ -25,30 +24,30 @@
   - name: Add Docker GPG apt Key
     become: true
     become_user: root
-    shell: | 
-       mkdir -m 0755 -p /etc/apt/keyrings
-       curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    shell: |
+      mkdir -m 0755 -p /etc/apt/keyrings
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     register: add_docker_gpg_apt_key
-  - debug: var=add_docker_gpg_apt_key    
+  - debug: var=add_docker_gpg_apt_key
 
 
   - name: Add Docker Repository
-    shell: | 
-       echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-       $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    shell: |
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     register: add_docker_repository
-  - debug: var=add_docker_repository   
+  - debug: var=add_docker_repository
 
   - name: install pip3
     apt: name=python3-pip state=present
     register: install_pip3
-  - debug: var=install_pip3   
+  - debug: var=install_pip3
 
   - name: Install bottle python package
     ansible.builtin.pip:
-     name: bottle
+      name: bottle
     register: install_bottle_python_package
-  - debug: var=install_bottle_python_package 
+  - debug: var=install_bottle_python_package
 
   - name: Update apt and install Docker CE
     apt:
@@ -56,15 +55,15 @@
       state: latest
       update_cache: true
     register: update_apt_and_install_docker_ce
-  - debug: var=update_apt_and_install_docker_ce 
-    
+  - debug: var=update_apt_and_install_docker_ce
+
   - name: Update apt and install Docker CLI
     apt:
       name: docker-ce-cli
       state: latest
       update_cache: true
     register: update_apt_and_install_docker_ce_cli
-  - debug: var=update_apt_and_install_docker_ce_cli 
+  - debug: var=update_apt_and_install_docker_ce_cli
 
   - name: Update apt and install Containerd IO
     apt:
@@ -72,7 +71,7 @@
       state: latest
       update_cache: true
     register: update_apt_and_install_containerd_io
-  - debug: var=update_apt_and_install_containerd_io 
+  - debug: var=update_apt_and_install_containerd_io
 
   - name: Update apt and install Docker BuildX Plugin
     apt:
@@ -80,7 +79,7 @@
       state: latest
       update_cache: true
     register: update_apt_and_install_docker_buildx_pugin
-  - debug: var=update_apt_and_install_docker_buildx_pugin 
+  - debug: var=update_apt_and_install_docker_buildx_pugin
 
   - name: Update apt and install Docker Compose Plugin
     apt:
@@ -88,25 +87,25 @@
       state: latest
       update_cache: true
     register: update_apt_and_install_docker_compose_plugin
-  - debug: var=update_apt_and_install_docker_compose_plugin 
+  - debug: var=update_apt_and_install_docker_compose_plugin
 
   - name: Test Docker Installation
     become: true
     become_user: root
-    shell: | 
+    shell: |
       docker run hello-world
     register: add_docker_gpg_apt_key
-  - debug: var=add_docker_gpg_apt_key  
+  - debug: var=add_docker_gpg_apt_key
 
   - name: Install Docker Module for Python
     pip:
       name: docker
     register: install_docker_module_for_python
-  - debug: var=install_docker_module_for_python   
+  - debug: var=install_docker_module_for_python
 
   handlers:
-    - name: docker status
-      service: name=docker state=started    
- 
+  - name: docker status
+    service: name=docker state=started
 
-  
+
+
