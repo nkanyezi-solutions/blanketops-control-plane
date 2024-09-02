@@ -1,0 +1,28 @@
+- hosts: all
+  become: true
+  strategy: debug
+  tasks:
+  - name: Download Etcd
+    command: wget -q --show-progress --https-only --timestamping "https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd64.tar.gz"
+    register: download_etcd
+  - debug: var=download_etcd
+
+  - name: Extract and Install Etcd
+    command: tar -xvf etcd-v3.3.9-linux-amd64.tar.gz && mv etcd-v3.3.9-linux-amd64/etcd* /usr/local/bin/
+    register: extract_and_install_etcd
+  - debug: var=extract_and_install_etcd
+
+  - name: Configure The Etcd Server
+    command: mkdir -p /etc/etcd /var/lib/etcd && cp ca.crt etcd-server.key etcd-server.crt /etc/etcd/
+    register: move_kubectl
+  - debug: var=move_kubectl
+
+  # - name: Verify Kubectl
+  #   command: kubectl version --client
+  #   register: verify_kubectl
+  # - debug: var=verify_kubectl
+
+
+
+
+
