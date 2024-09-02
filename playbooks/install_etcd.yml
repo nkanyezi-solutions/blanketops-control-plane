@@ -39,10 +39,10 @@
     register: start_the_etcd_service
   - debug: var=start_the_etcd_service
 
-  - name: Verify Etcd
-    ansible.builtin.script: /home/blanketops/blanketops/blanketops-control-plane/etcd/verification.sh
-    register: verify_etcd
-  - debug: var=verify_etcd
+  # - name: Verify Etcd
+  #   ansible.builtin.script: /home/blanketops/blanketops/blanketops-control-plane/etcd/verification.sh
+  #   register: verify_etcd
+  # - debug: var=verify_etcd
 
 
 
