@@ -102,11 +102,14 @@ Vagrant.configure("2") do |config|
       node.vm.network :private_network, ip: IP_NW + "#{MASTER_IP_START + i}"
       node.vm.network "forwarded_port", guest: 22, host: "#{2710 + i}"
 
-      node.vm.provision "install_kubectl", type: 'ansible' do |ansible|
-        ansible.playbook = "../playbooks/install_kubectl.yml"
-      end  
-      node.vm.provision "install_docker", type: 'ansible'  do |ansible|
-        ansible.playbook = "../playbooks/install_docker.yml"
+      # node.vm.provision "install_kubectl", type: 'ansible' do |ansible|
+      #   ansible.playbook = "../playbooks/install_kubectl.yml"
+      # end  
+      # node.vm.provision "install_docker", type: 'ansible'  do |ansible|
+      #   ansible.playbook = "../playbooks/install_docker.yml"
+      # end  
+      node.vm.provision "install_etcd", type: 'ansible' do |ansible|
+        ansible.playbook = "../playbooks/install_etcd.yml"
       end  
       provision_kubernetes_node node
       if i == 1
@@ -146,16 +149,12 @@ Vagrant.configure("2") do |config|
       node.vm.network :private_network, ip: IP_NW + "#{NODE_IP_START + i}"
       node.vm.network "forwarded_port", guest: 22, host: "#{2720 + i}"
 
-      node.vm.provision "install_kubectl", type: 'ansible' do |ansible|
-        ansible.playbook = "../playbooks/install_kubectl.yml"
-        # ansible.sudo = true
-        # ansible.inventory_path = 'ansible/inventory/site'
-        # ansible.host_key_checking = false
-      end  
-      node.vm.provision "install_docker", type: 'ansible'  do |ansible|
-        ansible.playbook = "../playbooks/install_docker.yml"
-      end  
-     
+      # node.vm.provision "install_kubectl", type: 'ansible' do |ansible|
+      #   ansible.playbook = "../playbooks/install_kubectl.yml"
+      # end  
+      # node.vm.provision "install_docker", type: 'ansible'  do |ansible|
+      #   ansible.playbook = "../playbooks/install_docker.yml"
+      # end  
       provision_kubernetes_node node
     end
   end

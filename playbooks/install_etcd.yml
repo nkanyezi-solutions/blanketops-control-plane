@@ -7,20 +7,42 @@
     register: download_etcd
   - debug: var=download_etcd
 
-  - name: Extract and Install Etcd
-    command: tar -xvf etcd-v3.3.9-linux-amd64.tar.gz && mv etcd-v3.3.9-linux-amd64/etcd* /usr/local/bin/
-    register: extract_and_install_etcd
-  - debug: var=extract_and_install_etcd
+  - name: Extract Etcd
+    command: tar -xvf etcd-v3.3.9-linux-amd64.tar.gz
+    register: extract_etcd
+  - debug: var=extract_etcd
+
+  - name: Install Etcd
+    command: pwd  && mv /home/vagrant/etcd-v3.3.9-linux-amd64/etcd* /usr/local/bin/
+    become: true
+    become_user: root
+    register: install_etcd
+  - debug: var=install_etcd
 
   - name: Configure The Etcd Server
     command: mkdir -p /etc/etcd /var/lib/etcd && cp ca.crt etcd-server.key etcd-server.crt /etc/etcd/
     register: move_kubectl
   - debug: var=move_kubectl
 
-  # - name: Verify Kubectl
-  #   command: kubectl version --client
-  #   register: verify_kubectl
-  # - debug: var=verify_kubectl
+  # - name: Export Variables
+  #   command: export INTERNAL_IP=$(ip addr show enp0s8 | grep "inet " | awk '{print $2}' | cut -d / -f 1) && export ETCD_NAME=$(hostname -s)
+  #   register: export_variables
+  # - debug: var=export_variables
+
+  - name: Create the Etcd Service
+    ansible.builtin.script: /home/blanketops/blanketops/blanketops-control-plane/etcd/etcd_service.sh
+    register: create_the_etcd_service
+  - debug: var=create_the_etcd_service
+
+  - name: Start the Etcd Server
+    ansible.builtin.script: /home/blanketops/blanketops/blanketops-control-plane/etcd/start_etcd_server.sh
+    register: start_the_etcd_service
+  - debug: var=start_the_etcd_service
+
+  - name: Verify Etcd
+    ansible.builtin.script: /home/blanketops/blanketops/blanketops-control-plane/etcd/verification.sh
+    register: verify_etcd
+  - debug: var=verify_etcd
 
 
 
